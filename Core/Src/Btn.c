@@ -21,7 +21,7 @@ void initBtnClicks(BTN_CLICK* btnClick, GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
 	btn = btnClick;
 }
 
-void onClickInterrupt(uint16_t GPIO_Pin)
+void btnOnClickInterrupt(uint16_t GPIO_Pin)
 {
 	if(!(HAL_GPIO_ReadPin(btn->GPIOx, btn->GPIO_Pin)))
 	{
@@ -64,7 +64,7 @@ void handleClicks()
 		{
 			btn->noiseWait = OFF;
 			btn->bounceCounter = 0;
-			onClickInterrupt(btn->GPIO_Pin);
+			btnOnClickInterrupt(btn->GPIO_Pin);
 		}
 
 	}
@@ -80,7 +80,7 @@ void handleClicks()
 		case WAITING_FOR_RELEASE:
 			if(btn->counter > 1000)
 			{
-			btn->status = WAITING_FOR_LONG_PRESS;
+				btn->status = WAITING_FOR_LONG_PRESS;
 			}
 			break;
 

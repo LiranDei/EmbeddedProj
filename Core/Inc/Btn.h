@@ -38,6 +38,6 @@ typedef struct BTN_CLICK
 }BTN_CLICK;
 
 void myMain(UART_HandleTypeDef*);
-void onClickInterrupt(uint16_t GPIO_Pin);
+void btnOnClickInterrupt(uint16_t GPIO_Pin);
 void handleClicks();
 void initBtnClicks(BTN_CLICK*, GPIO_TypeDef*, uint16_t);

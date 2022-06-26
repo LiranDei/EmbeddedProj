@@ -24,19 +24,13 @@ typedef struct _led
 	LED_STATE state;
 	GPIO_TypeDef* GPIOx;
 	uint16_t GPIO_Pin;
+	int brightness;
 	int counter;
 	int period;
 
 }LED;
 
-typedef struct _btn
-{
-	GPIO_TypeDef* GPIOx;
-	uint16_t GPIO_Pin;
-	int firstTick;
-	int secondTick;
-}BTN;
-
+void htimInit(TIM_HandleTypeDef*);
 void ledInit(LED*, GPIO_TypeDef*, uint16_t);
 void ledOn(LED* );
 void ledOff(LED* );
@@ -46,5 +40,5 @@ void ledOnPeriodicTask(LED*);
 void handleCommand();
 int commTask(UART_HandleTypeDef*);
 void myMain(UART_HandleTypeDef* );
-
+void setBrightness (LED*, int);
 

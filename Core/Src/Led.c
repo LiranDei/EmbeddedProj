@@ -12,7 +12,12 @@ LED* ledBlue;
 uint8_t ch;
 uint8_t cmdbuffer[MAX_BUFFER_LENGTH];
 int cmdcount = 0;
+TIM_HandleTypeDef* htimFour;
 
+void htimInit(TIM_HandleTypeDef* htim4)
+{
+	htimFour = htim4;
+}
 void ledInit(LED* led, GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
 {
 	led->state = STATE_OFF;
@@ -57,11 +62,21 @@ void ledOnTimerInterrupt(LED* led)
 		HAL_GPIO_TogglePin(led->GPIOx, led->GPIO_Pin);
 		led->counter = 0;
 	}
+
 	else
 	{
 		led ->counter++;
+
 	}
 
+}
+
+void setBrightness (LED* led, int brightness)
+{
+	led->state = STATE_BRIGHTNESS;
+	HAL_TIM_Base_Start_IT(htimFour);
+	HAL_TIM_PWM_Start_IT(htimFour,TIM_CHANNEL_1);
+	__HAL_TIM_SET_COMPARE(htimFour,TIM_CHANNEL_1, brightness);
 }
 
 void ledOnPeriodicTask(LED* led)
@@ -101,6 +116,8 @@ void handleCommand()
 	char* tokens;
 	tokens = strtok(cmdbuffer,"  \r");
 	strcpy(cmd,tokens);
+	HAL_TIM_Base_Stop_IT(htimFour);
+	HAL_TIM_PWM_Stop_IT(htimFour,TIM_CHANNEL_1);
 
 	if (strcmp(cmd, "full") == 0)
 	{
@@ -109,7 +126,12 @@ void handleCommand()
 	}
 	else if (strcmp(cmd, "half") == 0)
 	{
-		//brightNess(&htim6);
+		tokens = strtok(NULL, "  \r");
+		strcpy(cmd,tokens);
+		int value;
+		strcpy(cmd,tokens);
+		value = (int)atoi((const)cmd);
+		setBrightness(ledBlue, value);
 	}
 	else if (strcmp(cmd, "blink") == 0)
 	{
@@ -128,7 +150,7 @@ void handleCommand()
 
 		int value;
 		strcpy(cmd,tokens);
-		value = atoi((const)cmd);
+		value = (int)atoi((const)cmd);
 		ledBlink(ledBlue, value);
 		ledBlink(ledRed, value);
 	}
