@@ -6,6 +6,7 @@
  */
 
 #include "Led.h"
+#include "Sensor.h"
 
 LED* ledRed;
 LED* ledBlue;
@@ -13,11 +14,14 @@ uint8_t ch;
 uint8_t cmdbuffer[MAX_BUFFER_LENGTH];
 int cmdcount = 0;
 TIM_HandleTypeDef* htimFour;
+LIGHT_SENSOR* lightSensor;
 
 void htimInit(TIM_HandleTypeDef* htim4)
 {
 	htimFour = htim4;
 }
+
+
 void ledInit(LED* led, GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)
 {
 	led->state = STATE_OFF;
